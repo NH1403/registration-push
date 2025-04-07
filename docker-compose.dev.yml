@@ -1,0 +1,43 @@
+services:
+  rabbitmq:
+    hostname: 'rabbit'
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - '5431:5432'
+    environment:
+      POSTGRES_PASSWORD: postgres
+  registration:
+    build:
+      context: .
+      dockerfile: ./apps/registration/Dockerfile
+      target: development
+    command: npm run start:dev registration
+    env_file:
+      - ./apps/registration/.env
+    depends_on:
+      - rabbitmq
+      - db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+  push:
+    build:
+      context: .
+      dockerfile: ./apps/push/Dockerfile
+      target: development
+    command: npm run start:dev push
+    env_file:
+      - ./apps/push/.env
+    depends_on:
+      - rabbitmq
+      - db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
