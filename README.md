@@ -47,7 +47,7 @@ Example usage:
 ```bash
 POST localhost:3000
 json body:
-{"name":"Somename"}
+{"name":"SomeNewUser"}
 ```
 
 To stop the app and services:
